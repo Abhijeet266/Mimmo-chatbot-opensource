@@ -30,4 +30,3 @@ CMD bash -c "python -m vllm.entrypoints.openai.api_server \
     --tool-call-parser mistral \
     --enable-auto-tool-choice & \
     python -u handler.py"
-```
