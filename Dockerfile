@@ -31,12 +31,3 @@ CMD bash -c "python -m vllm.entrypoints.openai.api_server \
     --enable-auto-tool-choice & \
     python -u handler.py"
 ```
-
----
-
-**Folder structure:**
-```
-mistral-runpod/
-├── Dockerfile
-├── handler.py
-└── requirements.txt
