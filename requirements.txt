@@ -1,0 +1,7 @@
+runpod
+vllm==0.4.3
+huggingface-hub==0.24.0
+transformers==4.44.0
+sentencepiece
+protobuf
+requests
