@@ -12,6 +12,7 @@ from vllm import LLM, SamplingParams
 
 # ─────────────────────────────────────────────
 #  CONFIG
+#
 # ─────────────────────────────────────────────
 @dataclass
 class Config:
