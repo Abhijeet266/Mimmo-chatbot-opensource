@@ -1,17 +1,24 @@
-FROM vllm/vllm-openai:v0.6.0
+FROM runpod/pytorch:2.8.0-py3.11-cuda12.8.1-cudnn-devel-ubuntu22.04
 
-WORKDIR /app
+ENV VLLM_USE_CACHE=1
+ENV CUDA_HOME=/usr/local/cuda
+ENV LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install -y ninja-build curl \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY handler.py .
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    mv /root/.local/bin/uv /usr/local/bin/uv
 
-ENV HF_HOME=/app/model-cache
+RUN uv venv $VIRTUAL_ENV
 
-EXPOSE 8000
+COPY requirements.txt /
+RUN uv pip install vllm==0.10.1 && \
+    uv pip install -r /requirements.txt
 
-# Override the base image's entrypoint — this is the fix
-ENTRYPOINT []
-CMD ["/bin/bash", "start.sh"]
+COPY rp_handler.py /
 
+WORKDIR /
+CMD ["python", "-u", "rp_handler.py"]

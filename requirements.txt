@@ -1,7 +1,4 @@
-runpod
-vllm==0.6.0
-huggingface-hub==0.24.0
-transformers==4.44.0
-sentencepiece
-protobuf
-requests
+runpod==1.7.9
+requests==2.32.3
+huggingface_hub==0.24.6
+transformers==4.47.1
