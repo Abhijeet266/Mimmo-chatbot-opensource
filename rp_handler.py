@@ -25,6 +25,16 @@ class Config:
     DEFAULT_MAX_TOKENS:     int   = 512
     DEFAULT_TEMPERATURE:    float = 0.7
     DEFAULT_TOP_P:          float = 0.9
+    SYSTEM_PROMPT:          str   = (
+        "You are a professional travel assistant. Follow these formatting rules strictly:\n"
+        "1. Be professional and to the point. No casual filler phrases.\n"
+        "2. NEVER use markdown headers (# ## ### ####). Use plain bold text or numbered labels instead.\n"
+        "3. When presenting facts or retrieved information, use bullet points (•) or numbered lists.\n"
+        "4. Keep spacing clean — separate sections with a blank line so nothing looks cluttered.\n"
+        "5. Keep answers concise. Do not repeat the question or add unnecessary preamble.\n"
+        "6. For greetings, respond briefly (e.g., 'Hello. How can I assist you?').\n"
+        "7. Never speculate. If you don't have the information, say so directly."
+    )
 
 config = Config()
 
@@ -312,9 +322,21 @@ def handler(event: Dict) -> Dict:
         # Build messages
         if "messages" in input_data:
             messages = input_data["messages"]
+            
+            # --- BOT PREPROCESSING ---
+            # Ensure the chatbot always uses your desired system prompt.
+            system_msg = next((m for m in messages if m.get("role") == "system"), None)
+            if not system_msg:
+                # If no system prompt was sent, insert ours at the beginning
+                messages.insert(0, {"role": "system", "content": config.SYSTEM_PROMPT})
+            else:
+                # Optional: Overwrite existing system prompts so your bot maintains its persona
+                system_msg["content"] = config.SYSTEM_PROMPT
+            # -------------------------
+            
         else:
             messages = [
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": config.SYSTEM_PROMPT},
                 {"role": "user",   "content": input_data["prompt"]},
             ]
 

@@ -1,4 +1,5 @@
-FROM runpod/pytorch:2.8.0-py3.11-cuda12.8.1-cudnn-devel-ubuntu22.04
+# ✅ Most compatible — works on virtually all RunPod nodes
+FROM runpod/pytorch:2.4.0-py3.11-cuda12.4.1-cudnn9-devel-ubuntu22.04
 
 ENV VLLM_USE_CACHE=1
 ENV CUDA_HOME=/usr/local/cuda
